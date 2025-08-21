@@ -1,0 +1,7 @@
+thresholds:
+  pattern_trigger_count: 5
+  max_actions_per_host_hour: 3
+detector:
+  distance_quantile: 0.95
+providers:
+  cluster_A: http://provider_mcp:8090

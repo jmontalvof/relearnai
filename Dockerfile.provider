@@ -1,0 +1,7 @@
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+COPY provider_mcp_sample /app/provider_mcp_sample
+EXPOSE 8090
+CMD ["uvicorn", "provider_mcp_sample.provider:app", "--host", "0.0.0.0", "--port", "8090"]

@@ -1,0 +1,43 @@
+version: '3.9'
+services:
+  provider_mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.provider
+    image: relearnai/provider:dev
+    container_name: provider_mcp
+    ports:
+    - 8090:8090
+    command:
+    - uvicorn
+    - provider_mcp_sample.provider:app
+    - --host
+    - 0.0.0.0
+    - --port
+    - '8090'
+    - --reload
+  relearnai_core:
+    build:
+      context: .
+      dockerfile: Dockerfile.core
+    image: relearnai/core:dev
+    container_name: relearnai_core
+    depends_on:
+    - provider_mcp
+    environment:
+    - PROVIDER_CLUSTER_A=http://provider_mcp:8090
+    - PORT= 8084
+    volumes:
+    - ./relearnai_core/models:/app/relearnai_core/models
+    - ./relearnai_core/data:/app/relearnai_core/data
+    - ./relearnai_core/logs:/app/relearnai_core/logs
+    ports:
+    - 8084:8084
+    command:
+    - uvicorn
+    - relearnai_core.app:app
+    - --host
+    - 0.0.0.0
+    - --port
+    - '8084'
+    - --reload
